@@ -1,12 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
-
+import NewChartTest from "./NewChartTest";
+import NewNewChartTest from "./NewNewChartTest";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    {/* <App /> */}
+    {/* <NewChartTest /> */}
+    <NewNewChartTest />
   </React.StrictMode>,
   document.getElementById("root")
 );

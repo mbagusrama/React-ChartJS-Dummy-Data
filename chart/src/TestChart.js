@@ -1,86 +1,37 @@
-import $ from 'jquery';
-import { Chart as ChartJS } from 'chart.js';
-import { Chart, Line } from 'react-chartjs-2';
-import { useEffect, useState } from 'react';
+import React from "react";
+import './App.css';
+class TestChart extends React.Component {
 
-function TestChart() {
-  var updateInterval = 20; //in ms
-  var numberElements = 200;
+	// Constructor
+	constructor(props) {
+		super(props);
 
-  var updateCount = 0;
+		this.state = {
+			items: [],
+			DataisLoaded: false
+		};
+	}
 
-  var xAccelChart = $("#xAccelChart");
+	componentDidMount() {
+		fetch("https://api.thingspeak.com/channels/1911662/feeds.json?key=3OWB93ZA5CDH4DCG&results=2")
+	}
+	render() {
+		const { DataisLoaded, items } = this.state;
+		if (!DataisLoaded) return <div>
+			<h1> Pleses wait some time.... </h1> </div> ;
 
-  var commonOptions = {
-    scales: {
-      xAxes: [{
-        type: 'time',
-        time: {
-          displayFormats: {
-            millisecond: 'mm:ss:SSS'
-          }
-        }
-      }],
-      yAxes: [{
-        ticks: {
-          beginAtZero: true
-        }
-      }]
-    },
-    legend: { display: false },
-    tooltips: {
-      enabled: false
-    }
-  };
-
-  var xAccelChartInstance = new Chart(xAccelChart, {
-    type: 'line',
-    data: {
-      datasets: [{
-        label: "X Acceleration",
-        data: 0,
-        fill: false,
-        borderColor: '#343e9a',
-        borderWidth: 1
-      }]
-    },
-    options: Object.assign({}, commonOptions, {
-      title: {
-        display: true,
-        text: "Acceleration - X",
-        fontSize: 18
-      }
-    })
-  });
-
-  const addData = (data) => {
-    xAccelChartInstance.data.labels.push(new Date());
-    xAccelChartInstance.data.datasets.forEach((dataset) => { dataset.data.push(data["RH"]) });
-    if (updateCount > numberElements) {
-      xAccelChartInstance.data.labels.shift();
-      xAccelChartInstance.data.datasets[0].data.shift();
-    }
-    else updateCount++;
-    xAccelChartInstance.update();
-  };
-
-
-  const updateData = () => {
-    console.log("Update Data");
-    $.getJSON("ChartData.JSON", addData);
-    setTimeout(updateInterval);
-  }
-
-  updateData();
-  console.log(xAccelChartInstance);
-
-  return (
-    <div className='lineChart' >
-      <div style={{ width: 700 }}>
-        <Line data={xAccelChartInstance} />
-      </div>
-    </div>
-  );
+		return (
+		<div className = "App">
+			<h1> Fetch data from an api in react </h1> {
+				items.map((item) => (
+				<ol key = { item.created_at } >
+					User_Name: { item.field1 },
+          </ol>
+				))
+			}
+		</div>
+	);
+}
 }
 
 export default TestChart;
